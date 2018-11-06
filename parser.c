@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 int hello(char * inputt) {
+	int fd;
 	char input[80];
 	char buffer[80];
 	char cmdbuffer[80];
@@ -17,8 +18,18 @@ int hello(char * inputt) {
 		}
 		else if (strcmp(buffer,"<") == 1) {
 			current = strtok(NULL, " ");
+			if ((fd = open(current, O_RDONLY)) == -1) {
+				perror("something is wrong\n");
+				exit(1);
+			}
+			dup2(fd,0);
+			close(fd);
+
+			if (execvp(cmdbuffer, (char *) NULL) == -1) {
+				perror("execvp went wrong");
+			}
 			//do something with input and program file
-						
+			if (current == NULL) break;
 		}
 		strcpy(cmdbuffer, current);
 		printf("%s\n",buffer);
