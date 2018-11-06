@@ -1,5 +1,7 @@
-#include <strings.h>
 #include <stdio.h>
+#include <string.h>
+#include <fcntl.h>
+#include <stdlib.h>
 
 int hello(char * inputt) {
 	int fd;
@@ -16,7 +18,7 @@ int hello(char * inputt) {
 			buffer[strlen(buffer)-1] = '\0';
 			//fork and exec
 		}
-		else if (strcmp(buffer,"<") == 1) {
+		else if (strcmp(buffer,"<") == 0) {
 			current = strtok(NULL, " ");
 			if ((fd = open(current, O_RDONLY)) == -1) {
 				perror("something is wrong\n");
@@ -39,6 +41,6 @@ int hello(char * inputt) {
 }
 
 int main (void) {
-	hello("cmd1 < input");
+	hello("./scanftest < sampleinput");
 	return 1;
 }
