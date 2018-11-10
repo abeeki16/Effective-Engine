@@ -34,21 +34,24 @@ void subparser (char * input) {
 			if (current == NULL) break;
 		}
 
-		//now doing the > operator
-		else if (strcmp(buffer,">") == 0 || strcmp(buffer,"1>") == 0) {
+		//now doing the >, 1> and 2> operator
+		else if (strcmp(buffer,">") == 0 || strcmp(buffer,"1>") == 0 || strcmp(buffer,"2>") == 0) {
 			current = strtok(NULL, " ");
 			//open file in write mode. Question: Append or overwrite?
 			if ((fd = open(current, O_WRONLY)) == -1) {
 				perror("something is wrong\n");
 				exit(1);
 			}
-			dup2(fd,1);
+			if (strcmp(buffer,"2>") == 0) dup2(fd,2);
+			if (strcmp(buffer,"2>") != 0) dup2(fd,1);
 			close(fd);
 			if (execvp(cmdbuffer, (char *) NULL) == -1) {
 				perror("execvp went wrong");
 			}
 			if (current == NULL) break;
 		}
+
+		//now doing the 2> operator
 
 		strcpy(cmdbuffer, current);
 		printf("%s\n",buffer);
