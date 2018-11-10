@@ -14,17 +14,35 @@ int main (void) {
 	//read in each line from stdin
 	while (fgets (buffer, 79 ,stdin) != NULL) {
 		//if it encounters a blank line then state = 1 to signify move to matrix B
-		if (strcmp(buffer,"\n") == 0) state = 1;
-		printf("%s\n",buffer);
-		current = strtok(input, " ");
+		if (strcmp(buffer,"\n") == 0) {
+			state = 1;
+			continue;
+		}
+		//get rid of \n at the end
+		buffer[strlen(buffer)-1] = '\0';
+		current = strtok(buffer, " ");
 		while (current != NULL) {
 			//for each line, read each string separated by spaces
 			if (state == 0) {
-				arowcount++;
+				//if this is the first row then count it
+				if (arowcount == 0) {
+					acolcount++;
+				}
+				//need to check if cur row is same as first row?
 			}
+			else if (state == 1) {
+				if (browcount == 0) bcolcount++;
+			}
+			printf("%s",current);
 			current = strtok(NULL, " ");
 		}
-		if (state == 0) acolcount++;
-		else if (state == 1) bcolcount++;
+		printf("\n");
+		if (state == 0) arowcount++;
+		else if (state == 1) browcount++;
 	}
+	printf("arow = %d", arowcount);
+	printf("acol = %d", acolcount);
+	printf("brow = %d", browcount);
+	printf("bcol = %d\n", bcolcount);
+	if (acol != brow) printf("invalid matrices\n");
 }

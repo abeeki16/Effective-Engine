@@ -11,7 +11,9 @@ int main (void) {
 	int revpointer = 0;
 
 	fgets(input,80,stdin);
+	input[strlen(input)-1] = '\0';
 	current = strtok(input,"|");
+	
 	while (current != NULL) {
 		//subparser(current);
 		//printf("%s\n",current);
@@ -20,7 +22,7 @@ int main (void) {
 		revpointer++;
 		current = strtok(NULL,"|");
 	}
-	for (int i = revpointer-1; i > 0; i--) {
+	for (int i = revpointer-1; i >= 0; i--) {
 		printf("%s\n",reverser[i]);
 	}
 }

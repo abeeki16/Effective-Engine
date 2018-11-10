@@ -8,5 +8,6 @@ int main(void) {
 	scanf("%s", buffer);
 	strcat(buffer, " hello");
 	printf(buffer);
+	printf("\n");
 	return 0;
 }
