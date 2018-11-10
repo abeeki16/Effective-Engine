@@ -9,6 +9,10 @@ void subparser () {
 	char cmdbuffer[80];
 	char input[80];
 	char * current;
+	int savedStandardOutput;
+	int savedStandardInput;
+	int savedStandardError;
+	int redirectedDescriptors[3] = {0,0,0};
 	pid_t pid;
 	int readyToExec = 0;
 	while (1) {
@@ -29,10 +33,12 @@ void subparser () {
 					perror("something is wrong\n");
 					exit(1);
 				}
-
+				savedStandardInput = dup(0);
+				
 				dup2(fd,0);
 				close(fd);
 				readyToExec = 1;
+				redirectedDescriptors[0] = 1;
 			}
 
 			//now doing the >, 1>, 2> and &> operators
@@ -44,18 +50,36 @@ void subparser () {
 					exit(1);
 				}
 				//when in case of &>, does order of output matter?
-				if (strcmp(buffer,"2>") == 0 || strcmp(buffer,"&>") == 0) dup2(fd,2);
-				if (strcmp(buffer,"2>") != 0 || strcmp(buffer,"&>") == 0) dup2(fd,1);
+				if (strcmp(buffer,"2>") == 0 || strcmp(buffer,"&>") == 0) {
+					savedStandardError = dup(2);
+					dup2(fd,2);
+					redirectedDescriptors[2] = 1;
+					
+				}
+				if (strcmp(buffer,"2>") != 0 || strcmp(buffer,"&>") == 0) {
+					savedStandardOutput = dup(1);
+					dup2(fd,1);
+					redirectedDescriptors[1] = 1;
+					
+				}
 				close(fd);
 				readyToExec = 1;
 				
+			} 
+			
+			else {
+				strcpy(cmdbuffer, buffer);
 			}
 			
-			strcpy(cmdbuffer, buffer);
-			printf(cmdbuffer);
+			current = strtok(NULL, " ");
+			
+			if(current==NULL) {
+				readyToExec =1 ;
+			}
+			
+			
 			if (readyToExec) {
 				readyToExec = 0;
-				printf("Execing");
 				pid = fork();
 				if (pid==0) {
 					if (execvp(cmdbuffer, (char *) NULL) == -1) {
@@ -63,16 +87,30 @@ void subparser () {
 					}
 				} else {
 					wait(NULL);
+					if (redirectedDescriptors[0]) {
+						printf("\n%s %d","Standard input:",savedStandardInput);
+						dup2(savedStandardInput,0);
+						close(savedStandardInput);
+					} 
+					if (redirectedDescriptors[1]) {
+						dup2(savedStandardOutput,1);
+						close(savedStandardOutput);
+					}
+					if (redirectedDescriptors[2]) {
+						dup2(savedStandardError,2);
+						close(savedStandardError);
+					}
 				}
 			}
 			
 			//TODO: handle simplest case when it's something like "./a.out"
 			//without any operators
 
-			current = strtok(NULL, " ");
+			
 	}
 	
 	}
+	
 	
 }
 
