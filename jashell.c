@@ -29,6 +29,11 @@ void subparser () {
 			} 
 			else if (strcmp(buffer,"<") == 0) {
 				current = strtok(NULL, " ");
+				strcpy(buffer, current);
+				if (buffer[strlen(buffer)-1] == ';') {
+					buffer[strlen(buffer)-1] = '\0';
+					readyToExec =1;
+				} 
 				if ((fd = open(current, O_RDONLY)) == -1) {
 					perror("something is wrong\n");
 					exit(1);
