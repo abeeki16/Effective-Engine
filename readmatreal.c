@@ -24,5 +24,7 @@ int main (void) {
 			}
 			current = strtok(NULL, " ");
 		}
+		if (state == 0) acolcount++;
+		else if (state == 1) bcolcount++;
 	}
 }
