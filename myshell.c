@@ -1,13 +1,15 @@
 #include <stdio.h>
 #include <string.h>
 #include <fcntl.h>
+#include <unistd.h>
+
 void main() {
 	char input[80];
 	int fd;
 	char buffer[80];
 	char cmdbuffer[80];
 	char * current;
-	
+	pid_t pid;
 	printf("myshell>" );
 	fgets(input,80,stdin);
 	strtok(input,"\n");
@@ -17,7 +19,10 @@ void main() {
 		strcpy(buffer, current);
 		if (buffer[strlen(buffer)-1] == ';') {
 			buffer[strlen(buffer)-1] = '\0';
-			//fork and exec
+			pid = fork();
+			if (pid == 0) {
+				execvp(cmdbuffer, (char *) NULL);
+			}
 		}
 		else if (strcmp(buffer,"<") == 0) {
 			current = strtok(NULL, " ");
