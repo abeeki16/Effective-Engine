@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <fcntl.h>
+#include <stdlib.h>
 
 void subparser (char * input) {
 	int fd;
@@ -34,7 +35,7 @@ void subparser (char * input) {
 		}
 
 		//now doing the > operator
-		else if (strcmp(buffer,">") == 0) {
+		else if (strcmp(buffer,">") == 0 || strcmp(buffer,"1>") == 0) {
 			current = strtok(NULL, " ");
 			//open file in write mode. Question: Append or overwrite?
 			if ((fd = open(current, O_WRONLY)) == -1) {
