@@ -42,6 +42,7 @@ void subparser (char * input) {
 				perror("something is wrong\n");
 				exit(1);
 			}
+			//when in case of &>, does order of output matter?
 			if (strcmp(buffer,"2>") == 0 || strcmp(buffer,"&>") == 0) dup2(fd,2);
 			if (strcmp(buffer,"2>") != 0 || strcmp(buffer,"&>") == 0) dup2(fd,1);
 			close(fd);
@@ -65,6 +66,7 @@ void main() {
 	char * current;
 	
 	printf("myshell>");
+	//we should get rid of the \n at the end of string from fgets?
 	fgets(input,80,stdin);
 	current = strtok(input,";");
 	while (current != NULL) {
