@@ -4,6 +4,7 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <unistd.h>
+#include <sys/wait.h>
 
 key_t keya;
 int shmBuf1id;
@@ -82,7 +83,12 @@ void createBuf1() {
 	
 	//put matrices into shm areas
 	
-	
+ 	for (int i = 0; i < 10; i++) {
+		for (int j = 0; j < 10; j++) {
+			shmptra[i][j] = mata[i][j];
+			shmptrb[i][j] = matb[i][j];
+		}
+	}
 
 	//turning id's to strings for argument passing
 	sprintf(strida, "%d", shmBuf1id);
@@ -103,11 +109,17 @@ void createBuf1() {
 			argv[4] = targetrow;
 			argv[5] = targetcol;
 			pid = fork();
-			if (pid == 0) {
-				execvp("./multply",argv);
+			if (pid == -1) {
+				printf("I failed!!!!!!!!!!\n");
+				exit(1);
 			}
+			else if (pid == 0) {
+				execvp("./multiply",argv);
+			}
+			else wait(NULL);
 		}
 	}
+	printf("break here\n");
 	
 	
 	//for size of arrays, how big should they be initialized?
