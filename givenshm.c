@@ -16,7 +16,7 @@ int shmBuf3id;
 int (*shmptrc)[10];
 
 void createBuf1() {	
-	char * argv[4];
+	char * argv[7];
 	//will need more strids for other matrices
 	char strida[20];
 	char stridb[20];
@@ -73,6 +73,22 @@ void createBuf1() {
 	sprintf(strida, "%d", shmBuf1id);
 	sprintf(stridb, "%d", shmBuf2id);
 	sprintf(stridc, "%d", shmBuf3id);	
+	
+	/*
+ * 	argv[0] = "./multiply";
+ * 	argv[1] = strida;
+ * 	argv[2] = stridb;
+ * 	argv[3] = stridc;
+ *	argv[6] = acolnum;
+ * 	
+ 
+	for (int i = 0; i < arownum; i++) {
+		for (int j = 0; j < bcolnum; j++) {
+			argv[4] = i;
+			argv[5] = j;
+		}
+	}
+	*/
 
 	pid = fork();
 	if (pid == 0) {
@@ -83,6 +99,9 @@ void createBuf1() {
 		argv[1] = strida;
 		argv[2] = stridb;
 		argv[3] = stridc;
+		//argv[4] = i;
+		//argv[5] = j;
+		//argv[6] = acolnum;
 		execvp("./multiply",argv);
 		//printf("I'm supposedly running multiply with exec\n");
 	}

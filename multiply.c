@@ -22,6 +22,9 @@ int main(int argc, char * argv[]) {
 	sscanf(argv[1], "%d", &shmida);
 	sscanf(argv[2], "%d", &shmidb);
 	sscanf(argv[3], "%d", &shmidc);
+	//sscanf(argv[4], "%d", &arowind);
+	//sscanf(argv[5], "%d", &bcolind);
+	//sscanf(argv[6], "%d", &acolnum);
 	printf("exec: shmids are %d %d %d\n", shmida, shmidb, shmidc);
 
 	//initialize pointers
@@ -29,8 +32,13 @@ int main(int argc, char * argv[]) {
 	shmpointerb = shmat(shmidb, 0, 0);
 	shmpointerc = shmat(shmidc, 0, 0,);
 
-	
-	
+	/*
+	for (int i = 0; i < acolnum; i++) {
+		sum += shmpointera[arowind][i]*shmpointerb[i][bcolind];	
+	} 
+	*/
+	shmpointerc[arowind][bcolind] = sum;
+
 	printf("pointer is %p\n",shmpointera);
 	printf("Hi! I'm exec. [0][0] is %d\n",shmpointera[0][0]);
 	exit(EXIT_SUCCESS);
