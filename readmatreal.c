@@ -5,7 +5,8 @@
 #include <sys/shm.h>
 #include <unistd.h>
 #include <sys/wait.h>
-
+#include <errno.h>
+	
 key_t keya;
 int shmBuf1id;
 int (*shmptra)[10];
@@ -24,9 +25,10 @@ int arowcount = 0;
 int acolcount = 0;
 int browcount = 0;
 int bcolcount = 0;
+char * argv[8];
 
 void createBuf1() {	
-	char * argv[7];
+	//char * argv[7];
 	//will need more strids for other matrices
 	char strida[20];
 	char stridb[20];
@@ -82,9 +84,10 @@ void createBuf1() {
 	printf("all shmatting and shmgetting are successful.\n");
 	
 	//put matrices into shm areas
-	
- 	for (int i = 0; i < 10; i++) {
-		for (int j = 0; j < 10; j++) {
+	int i;
+	int j;
+ 	for (i = 0; i < 10; i++) {
+		for (j = 0; j < 10; j++) {
 			shmptra[i][j] = mata[i][j];
 			shmptrb[i][j] = matb[i][j];
 		}
@@ -101,26 +104,36 @@ void createBuf1() {
   	argv[2] = stridb;
   	argv[3] = stridc;
  	argv[6] = stracol;	
- 
-	for (int i = 0; i < arowcount; i++) {
-		for (int j = 0; j < bcolcount; j++) {
+ 	argv[7] = NULL;
+	for (i = 0; i < arowcount; i++) {
+		for (j = 0; j < bcolcount; j++) {
 			sprintf(targetrow,"%d",i);
 			sprintf(targetcol,"%d",j);
 			argv[4] = targetrow;
 			argv[5] = targetcol;
+			//test here
+			//test ends
 			pid = fork();
 			if (pid == -1) {
 				printf("I failed!!!!!!!!!!\n");
 				exit(1);
 			}
 			else if (pid == 0) {
-				execvp("./multiply",argv);
+				if (execvp("./multiply",argv) == -1) {
+					printf("exec error: %s\n", strerror(errno));
+					exit(1);
+				}
 			}
 			else wait(NULL);
 		}
 	}
-	printf("break here\n");
-	
+	//printf("break here\n");
+	for (i = 0; i < arowcount; i++) {
+		for (j = 0; j < bcolcount; j++) {
+			printf("%d ",shmptrc[i][j]);
+		}
+		printf("\n");
+	}
 	
 	//for size of arrays, how big should they be initialized?
 	//then read matrix c and print it out
@@ -175,10 +188,11 @@ int main (void) {
 	printf("brow = %d", browcount);
 	printf("bcol = %d\n", bcolcount);
 	if (acolcount != browcount) printf("invalid matrices\n");
-
+	int i;
+	int j;
 	//print matrix a
-	for (int i = 0; i < 10; i++) {
-		for (int j = 0; j < 10; j++) {
+	for (i = 0; i < 10; i++) {
+		for (j = 0; j < 10; j++) {
 			printf("%d ",mata[i][j]);
 		}
 		printf("\n");
