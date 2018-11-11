@@ -82,38 +82,24 @@ void createBuf1() {
 	sprintf(stridb, "%d", shmBuf2id);
 	sprintf(stridc, "%d", shmBuf3id);	
 	
-	/*
- * 	argv[0] = "./multiply";
- * 	argv[1] = strida;
- * 	argv[2] = stridb;
- * 	argv[3] = stridc;
- *	argv[6] = acolnum;
- * 	
+  	argv[0] = "./multiply";
+  	argv[1] = strida;
+  	argv[2] = stridb;
+  	argv[3] = stridc;
+ 	argv[6] = acolnum;	
  
 	for (int i = 0; i < arownum; i++) {
 		for (int j = 0; j < bcolnum; j++) {
 			argv[4] = i;
 			argv[5] = j;
+			pid = fork();
+			if (pid == 0) {
+				execvp("./multply",argv);
+			}
 		}
 	}
-	*/
-
-	pid = fork();
-	if (pid == 0) {
-		printf("I'm a child. [0][0] is %d\n",shmptra[0][0]);
-		//must exec and reconnect to memory
-		//must pass shmBuf1id as parameter 
-		argv[0] = "./multiply";
-		argv[1] = strida;
-		argv[2] = stridb;
-		argv[3] = stridc;
-		//argv[4] = i;
-		//argv[5] = j;
-		//argv[6] = acolnum;
-		execvp("./multiply",argv);
-		//printf("I'm supposedly running multiply with exec\n");
-	}
-	else wait(NULL);
+	
+	
 	//for size of arrays, how big should they be initialized?
 	//then read matrix c and print it out
 }
