@@ -3,12 +3,17 @@
 #include <fcntl.h>
 #include <stdlib.h>
 
+void pipeparser(char * command) {
+	
+}
+
 int main (void) {
 	char input[80];
 	char * current;	
 	printf("myshell> ");
 	char * reverser[20];
 	int revpointer = 0;
+	char reversed[250];
 
 	fgets(input,80,stdin);
 	input[strlen(input)-1] = '\0';
@@ -24,5 +29,7 @@ int main (void) {
 	}
 	for (int i = revpointer-1; i >= 0; i--) {
 		printf("%s\n",reverser[i]);
+		
 	}
+
 }
