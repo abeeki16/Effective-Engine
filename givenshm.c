@@ -7,7 +7,7 @@ key_t key;
 int shmBuf1id;
 int (*shmptr)[9];
 
-void createBuf1() {
+void createBuf1() {	
 	char * argv[2];
 	char strid[20];
 	pid_t pid;
@@ -38,6 +38,7 @@ void createBuf1() {
 		execvp("./multiply",argv);
 		//printf("I'm supposedly running multiply with exec\n");
 	}
+	else wait(NULL);
 	//for size of arrays, how big should they be initialized?
 
 }

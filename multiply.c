@@ -20,4 +20,5 @@ int main(int argc, char * argv[]) {
 	
 	printf("pointer is %p\n",shmpointer);
 	printf("Hi! I'm exec. [0][0] is %d\n",shmpointer[0][0]);
+	exit(EXIT_SUCCESS);
 }
