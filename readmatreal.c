@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
+#include <unistd.h>
 
 key_t keya;
 int shmBuf1id;
@@ -30,6 +31,10 @@ void createBuf1() {
 	char stridb[20];
 	char stridc[20];
 	pid_t pid;
+	char stracol[20];
+	char targetrow[20];
+	char targetcol[20];
+	
 	//making matrix a
 	keya = ftok(".",'a');
 	shmBuf1id = shmget(keya,sizeof(int[10][10]),IPC_CREAT|0666);
@@ -76,22 +81,27 @@ void createBuf1() {
 	printf("all shmatting and shmgetting are successful.\n");
 	
 	//put matrices into shm areas
+	
+	
 
 	//turning id's to strings for argument passing
 	sprintf(strida, "%d", shmBuf1id);
 	sprintf(stridb, "%d", shmBuf2id);
 	sprintf(stridc, "%d", shmBuf3id);	
-	
+	sprintf(stracol, "%d", acolcount);
+
   	argv[0] = "./multiply";
   	argv[1] = strida;
   	argv[2] = stridb;
   	argv[3] = stridc;
- 	argv[6] = acolnum;	
+ 	argv[6] = stracol;	
  
-	for (int i = 0; i < arownum; i++) {
-		for (int j = 0; j < bcolnum; j++) {
-			argv[4] = i;
-			argv[5] = j;
+	for (int i = 0; i < arowcount; i++) {
+		for (int j = 0; j < bcolcount; j++) {
+			sprintf(targetrow,"%d",i);
+			sprintf(targetcol,"%d",j);
+			argv[4] = targetrow;
+			argv[5] = targetcol;
 			pid = fork();
 			if (pid == 0) {
 				execvp("./multply",argv);
