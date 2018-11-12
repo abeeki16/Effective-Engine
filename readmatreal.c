@@ -81,7 +81,7 @@ void createBuf1() {
 		perror("shmat c error");
 		exit(1);
 	}
-	printf("all shmatting and shmgetting are successful.\n");
+	//printf("all shmatting and shmgetting are successful.\n");
 	
 	//put matrices into shm areas
 	int i;
@@ -174,29 +174,29 @@ int main (void) {
 				sscanf(current, "%d", &toput);
 				matb[browcount][temp] = toput;
 			}
-			printf("%s",current);
+		//	printf("%s",current);
 			current = strtok(NULL, " ");
 			temp++;
 		}
-		printf("\n");
+		//printf("\n");
 		if (state == 0) arowcount++;
 		else if (state == 1) browcount++;
 		temp = 0;
-	}
+	}/*
 	printf("arow = %d", arowcount);
 	printf("acol = %d", acolcount);
 	printf("brow = %d", browcount);
-	printf("bcol = %d\n", bcolcount);
+	printf("bcol = %d\n", bcolcount);*/
 	if (acolcount != browcount) printf("invalid matrices\n");
 	int i;
 	int j;
 	//print matrix a
-	for (i = 0; i < 10; i++) {
+	/*for (i = 0; i < 10; i++) {
 		for (j = 0; j < 10; j++) {
 			printf("%d ",mata[i][j]);
 		}
 		printf("\n");
-	}
+	}*/
 
 	createBuf1();
 	/*************************/
