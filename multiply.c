@@ -14,7 +14,7 @@ int main(int argc, char * argv[]) {
 	int arowind, bcolind, acolnum;
 	int sum = 0;
 	//acolnum is equal to brownum
-	printf("this is exec speaking!!!\n");
+	//printf("this is exec speaking!!!\n");
 	//strcpy(buffer,argv[1]);
 	//printf("exec: argv0 is %s, argv1 is %s\n",argv[0],argv[1]);
 	
@@ -25,7 +25,7 @@ int main(int argc, char * argv[]) {
 	sscanf(argv[4], "%d", &arowind);
 	sscanf(argv[5], "%d", &bcolind);
 	sscanf(argv[6], "%d", &acolnum);
-	printf("exec: shmids are %d %d %d\n", shmida, shmidb, shmidc);
+	//printf("exec: shmids are %d %d %d\n", shmida, shmidb, shmidc);
 
 	//initialize pointers
 	shmpointera = shmat(shmida, 0, 0);
@@ -38,7 +38,7 @@ int main(int argc, char * argv[]) {
 
 	shmpointerc[arowind][bcolind] = sum;
 
-	printf("pointer is %p\n",shmpointera);
-	printf("Hi! I'm exec. [0][1] is %d\n",shmpointera[0][1]);
-	//exit(EXIT_SUCCESS);
+	//printf("pointer is %p\n",shmpointera);
+	//printf("Hi! I'm exec. [0][1] is %d\n",shmpointera[0][1]);
+	exit(EXIT_SUCCESS);
 }
