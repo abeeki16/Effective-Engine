@@ -1,2 +1,6 @@
+readmatreal: readmatreal.c
+	gcc -g readmatreal.c -o readmatreal
+multiply: multiply.c
+	  gcc -g multiply.c -o multiply
 myshell: myshell.c
 	gcc -g -o myshell myshell.c
