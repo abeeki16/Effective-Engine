@@ -33,6 +33,7 @@ void my_thr_create(void (*func) (int),int thr_id) {
 		uc[thr_id].uc_link = &uc[thr_id+1];
 
 	}
+	//uc[thr_id].uc_link = &uc[(thr_id+1)%(arowcount*bcolcount)];
 	uc[thr_id].uc_stack.ss_sp = st[thr_id];
 	uc[thr_id].uc_stack.ss_size = sizeof st1;
 	makecontext (&uc[thr_id],func,1,thr_id);
@@ -44,6 +45,8 @@ void my_thr_create(void (*func) (int),int thr_id) {
 void multiplier(int id) {
 	int x = id/bcolcount;
 	int y = id%bcolcount;
+	printf("%s %d","Thread id",id);
+	printf("\n");
 	int i;
 	int sum = 0;
 	for (i = 0; i < acolcount; i++) {
@@ -51,11 +54,11 @@ void multiplier(int id) {
 	} 
 	resultant[x][y] = sum;
 	
-	if (id<(arowcount*bcolcount)-1){
+	/*if (id<(arowcount*bcolcount)-1){
 		setcontext(&uc[id+1]);
 	}else {
 		setcontext(&uc_main);
-	}
+	}*/
 }
 
 void createBuf1() {	
@@ -82,6 +85,8 @@ void createBuf1() {
 		my_thr_create((*funcPointer),i);
 	}
 	
+	getcontext(&uc_main);
+	//swapcontext(&uc_main,&uc[0]);
 	swapcontext(&uc_main,&uc[0]);
 	
 	for (i = 0; i < arowcount; i++) {
