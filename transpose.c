@@ -9,8 +9,8 @@ int main(void) {
 	int resultmatrix[10][10];
 	char * current;
 
-	int rowcount;
-	int colcount;
+	int rowcount = 0;
+	int colcount = 0;
 	int temp = 0;
 	int toput;
 
@@ -38,8 +38,8 @@ int main(void) {
 	}
 
 	//print result
-	for (i = 0; i < 10; i++) {
-		for (j = 0; j < 10; j++) {
+	for (i = 0; i < colcount; i++) {
+		for (j = 0; j < rowcount; j++) {
 			printf("%d ", resultmatrix[i][j]);
 		}
 		printf("\n");
