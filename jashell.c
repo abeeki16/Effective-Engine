@@ -2,7 +2,7 @@
 #include <string.h>
 #include <fcntl.h>
 #include <stdlib.h>
-
+#include <signal.h>
 void subparser () {
 	int fd;
 	char buffer[80];
@@ -15,6 +15,7 @@ void subparser () {
 	int redirectedDescriptors[3] = {0,0,0};
 	pid_t pid;
 	int readyToExec = 0;
+	//signal(SIGINT, SIG_IGN);
 	while (1) {
 		printf("myshell>" );
 		fgets(input,80,stdin);
@@ -26,6 +27,7 @@ void subparser () {
 			if (buffer[strlen(buffer)-1] == ';') {
 				buffer[strlen(buffer)-1] = '\0';
 				readyToExec =1;
+				strcpy(cmdbuffer,buffer);
 			} 
 			else if (strcmp(buffer,"<") == 0) {
 				current = strtok(NULL, " ");
@@ -34,7 +36,8 @@ void subparser () {
 					buffer[strlen(buffer)-1] = '\0';
 					readyToExec =1;
 				} 
-				if ((fd = open(current, O_RDONLY)) == -1) {
+				//buffer used to be current
+				if ((fd = open(buffer, O_RDONLY)) == -1) {
 					perror("something is wrong\n");
 					exit(1);
 				}
@@ -49,8 +52,13 @@ void subparser () {
 			//now doing the >, 1>, 2> and &> operators
 			else if (strcmp(buffer,">") == 0 || strcmp(buffer,"1>") == 0 || strcmp(buffer,"2>") == 0 || strcmp(buffer,"&>") == 0) {
 				current = strtok(NULL, " ");
+				strcpy(buffer,current);
+				if (buffer[strlen(buffer)-1]==';') {
+					buffer[strlen(buffer)-1]='\0';
+					readyToExec=1;
+				}
 				//open file in write mode. Question: Append or overwrite?
-				if ((fd = open(current, O_WRONLY)) == -1) {
+				if ((fd = open(buffer, O_WRONLY)) == -1) {
 					perror("something is wrong\n");
 					exit(1);
 				}
@@ -93,7 +101,7 @@ void subparser () {
 				} else {
 					wait(NULL);
 					if (redirectedDescriptors[0]) {
-						printf("\n%s %d","Standard input:",savedStandardInput);
+						//printf("\n%s %d","Standard input:",savedStandardInput);
 						dup2(savedStandardInput,0);
 						close(savedStandardInput);
 					} 
