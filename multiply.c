@@ -13,6 +13,7 @@ int main(int argc, char * argv[]) {
 	int shmida,shmidb,shmidc;
 	int arowind, bcolind, acolnum;
 	int sum = 0;
+	int i;
 	//acolnum is equal to brownum
 	//printf("this is exec speaking!!!\n");
 	//strcpy(buffer,argv[1]);
@@ -32,12 +33,15 @@ int main(int argc, char * argv[]) {
 	shmpointerb = shmat(shmidb, 0, 0);
 	shmpointerc = shmat(shmidc, 0, 0);
 
-	for (int i = 0; i < acolnum; i++) {
+	for (i = 0; i < acolnum; i++) {
 		sum += shmpointera[arowind][i]*shmpointerb[i][bcolind];	
 	} 
 
 	shmpointerc[arowind][bcolind] = sum;
-
+	
+	shmdt(shmpointera);
+	shmdt(shmpointerb);
+	shmdt(shmpointerc);
 	//printf("pointer is %p\n",shmpointera);
 	//printf("Hi! I'm exec. [0][1] is %d\n",shmpointera[0][1]);
 	exit(EXIT_SUCCESS);
