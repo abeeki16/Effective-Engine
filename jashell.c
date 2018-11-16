@@ -2,8 +2,10 @@
 #include <string.h>
 #include <fcntl.h>
 #include <stdlib.h>
+#include <signal.h>
 
 void subparser () {
+	//signal(SIGINT,sighandle);
 	int fd;
 	char buffer[80];
 	char cmdbuffer[80];
@@ -18,9 +20,20 @@ void subparser () {
 	int redirectedDescriptors[3] = {0,0,0};
 	pid_t pid;
 	int readyToExec = 0;
+	
+	//signal(SIGINT,SIG_IGN);
 	while (1) {
-		printf("myshell> " );
-		fgets(input,80,stdin);
+		//adding isatty and checking if end of file
+		if (isatty(0)) printf("myshell> " );
+		if (fgets(input,80,stdin) == NULL) {
+			//if encounters eof from file then don't end yet
+			//if (isatty(0) != 1) continue;
+			//if encountered eof from terminal then end because it's ctrl-d
+			//else {
+				printf("\n");
+				exit(1);
+			//}
+		}
 		strtok(input,"\n");
 		current = strtok(input, " ");
 		while (current != NULL) {
@@ -65,7 +78,7 @@ void subparser () {
 					dup2(fd,2);
 					redirectedDescriptors[2] = 1;
 					
-				}
+				}   
 				if (strcmp(buffer,"2>") != 0 || strcmp(buffer,"&>") == 0) {
 					savedStandardOutput = dup(1);
 					dup2(fd,1);
@@ -111,6 +124,8 @@ void subparser () {
 						perror("execvp went wrong");
 					}
 			} else {
+					signal(SIGCHLD,SIG_IGN);
+					signal(SIGINT,SIG_IGN);
 					wait(NULL);
 					argv[1] =NULL;
 					argv[2] = NULL;
@@ -151,9 +166,21 @@ void subparser () {
 	
 }
 
+
+void sighandle() {
+	pid_t curpid;
+	curpid = getpid();
+	if (curpid > 0) {
+		kill(0,SIGINT);
+		subparser();
+	}	
+	else exit(1);
+}
+        
 void main() {
 
-	
+	signal(SIGINT, sighandle);
+	if (getpid() > 0) signal(SIGCHLD,SIG_IGN);
 	subparser();
 
 }
