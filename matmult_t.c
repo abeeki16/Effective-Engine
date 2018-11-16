@@ -42,11 +42,11 @@ void my_thr_create(void (*func) (int),int thr_id) {
 void multiplier(int id) {
 	int x = id/bcolcount;
 	int y = id%bcolcount;
-	printf("\n");
+	//printf("\n");
 	int i;
 	int sum = 0;
 	for (i = 0; i < acolcount; i++) {
-		printf("%s %d\n","Thread id",id);
+		//printf("%s %d\n","Thread id",id);
 		sum += mata[x][i]*matb[i][y];
 		int j = (id+1)%(arowcount*bcolcount);
 		int threadsChecked= 1;
@@ -58,11 +58,11 @@ void multiplier(int id) {
 			threadsChecked++;
 		}
 		if (threadsChecked==arowcount*bcolcount) continue;
-		printf("%s %d\n","Switching1 to ",j);
+		//printf("%s %d\n","Switching1 to ",j);
 		swapcontext(&uc[id],&uc[j]);
 		
 	} 
-	printf("%d %s\n",id," has finished");
+	//printf("%d %s\n",id," has finished");
 	resultant[x][y] = sum;
 	status[id] = 1;
 	int j = (id+1)%(arowcount*bcolcount);
@@ -70,12 +70,12 @@ void multiplier(int id) {
 	while(status[j] && threadsChecked<(arowcount*bcolcount)) {
 		j = (id+1)%(arowcount*bcolcount);
 		if (threadsChecked==(arowcount*bcolcount)) {
-			printf("%s %s\n","Switching2 to ","main");
+			//printf("%s %s\n","Switching2 to ","main");
 			swapcontext(&uc[id],&uc_main);
 		}
 		threadsChecked++;
 	}
-	printf("%s %d\n","Switching3 to ",j);
+	//printf("%s %d\n","Switching3 to ",j);
 	swapcontext(&uc[id],&uc[j]);
 	/*if (id<(arowcount*bcolcount)-1){
 		setcontext(&uc[id+1]);
@@ -101,7 +101,7 @@ void createBuf1() {
 	
 	uc = (ucontext_t *)malloc(sizeof(ucontext_t)*(arowcount*bcolcount));
 	status = (int *)malloc(sizeof(int)*(arowcount*bcolcount));
-	printf("all shmatting and shmgetting are successful.\n");
+	//printf("all shmatting and shmgetting are successful.\n");
 	//put matrices into shm areas
 	int j;
 	void (*funcPointer) (int) = &multiplier;
@@ -115,7 +115,6 @@ void createBuf1() {
 	uc_main.uc_stack.ss_size = sizeof st1;
 	swapcontext(&uc_main,&uc[0]);
 	//swapcontext(&uc_main,&uc[0]);
-	printf("all shmatting and shmgetting are successful.\n");
 	for (i = 0; i < arowcount; i++) {
 		for (j = 0; j < bcolcount; j++) {
 			printf("%d ",resultant[i][j]);
