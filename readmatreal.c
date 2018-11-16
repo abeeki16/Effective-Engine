@@ -37,7 +37,8 @@ void createBuf1() {
 	char stracol[20];
 	char targetrow[20];
 	char targetcol[20];
-	
+	pid_t child_pid, wpid;
+	int status = 0;
 	//making matrix a
 	keya = ftok(".",'a');
 	shmBuf1id = shmget(keya,sizeof(int[10][10]),IPC_CREAT|0666);
@@ -46,7 +47,6 @@ void createBuf1() {
 		exit(1);
 	}
 	
-	printf("Don't look! I'm shmatting\n");
 	shmptra = shmat(shmBuf1id,0,0);
 	if(shmptra == (void*) -1 ){  
 		perror("shmat error");
@@ -124,9 +124,11 @@ void createBuf1() {
 					exit(1);
 				}
 			}
-			else wait(NULL);
+		
 		}
 	}
+	
+	while ((wpid = wait(&status)) > 0);
 	//printf("break here\n");
 	for (i = 0; i < arowcount; i++) {
 		for (j = 0; j < bcolcount; j++) {
