@@ -1,3 +1,5 @@
+pipeshell: pipeshell.c
+	gcc -g pipeshell.c -o pipeshell
 readmatreal: readmatreal.c
 	gcc -g readmatreal.c -o readmatreal
 multiply: multiply.c

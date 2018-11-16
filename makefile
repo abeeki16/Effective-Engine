@@ -1,3 +1,5 @@
+transpose: transpose.c
+	gcc transpose.c -o transpose
 matmult_t: matmult_t.c
 	gcc matmult_t.c -o matmult_t
 readmatreal: readmatreal.c
