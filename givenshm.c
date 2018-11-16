@@ -108,6 +108,9 @@ void createBuf1() {
 	else wait(NULL);
 	//for size of arrays, how big should they be initialized?
 	//then read matrix c and print it out
+	shmdt(shmptra);
+	shmdt(shmptrb);
+	shmdt(shmptrc);
 }
 
 int main(int argc, int *argv[]) {
